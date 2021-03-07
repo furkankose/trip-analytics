@@ -1,73 +1,109 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Trip Analytics
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## About The Project
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+### Tech Stack
 
-## Description
+The project is built with NestJS + MongoDB + Docker.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Tools
 
-## Installation
+#### ESLint + Prettier + Lintstaged
+
+To preserve coding standards, ESLint and Prettier is used in the project. All the changes that you did in project files are automatically checked,formatted and fixed before committed.
+
+#### husky + commitlint (Conventional Commit)
+
+To ensure that all commit messages meet the [conventional commit format](https://conventionalcommits.org/), commitlint package is used. If the commit message does not follow the conventional commit pattern, the package does not allow you to commit your changes until the commit message meets the requirements.
+
+#### GitHub Actions
+
+GitHub actions is used for creating CI/CD pipelines of the project.
+
+- When a new pull request is opened to be able to merge the new changes into main branch, GitHub Actions runs lint and test steps to ensure that nothing is broken with the new changes
+- When the new changes are commited into main branch, GitHub Actions builds the application, runs the tests, and deploys the application if build and test steps completed succesfully.
+
+### Project Structure
+
+#### Error Handlers
+
+There are two types of global error handler; [anyExceptionFilter](/src/filters/anyException.filter.ts) and [httpExceptionFilter](/src/filters/httpException.filter.ts).
+
+HttpExceptionFilter is responsible from catching the HTTP exceptions that are throwed in controller and service layers. The other error handler, AnyExceptionFilter, is responsible from catching all the other application level exceptions. If there will be a need for handling exceptions more spesifically in function level, local exception handlers can be added inside of the functions.
+
+#### Request Validation
+
+The ValidationPipe provides a convenient approach to enforce validation rules for all incoming client payloads, where the specific rules are declared with simple annotations in local class/DTO declarations in each module. It uses class-validator and class-transformer packages.
+
+## Running the app with Docker
 
 ```bash
-$ npm install
+$  docker-compose up --build production
 ```
 
-## Running the app
+## Running the app without Docker
+
+1.  Create .env file by cloning the [.env.sample](.env.sample)
+
+```bash
+$ cp .env.sample .env
+```
+
+2.  Fill the .env file with corresponding variables
+
+3.  Install packages
+
+```bash
+$ yarn install
+```
+
+4. Run the app
 
 ```bash
 # development
-$ npm run start
+$ yarn start
 
 # watch mode
-$ npm run start:dev
+$ yarn start:dev
 
 # production mode
-$ npm run start:prod
+$ yarn start:prod
 ```
 
-## Test
+## Running tests with Docker
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
+# unit and integration tests
+$ docker-compose run test
 
 # test coverage
-$ npm run test:cov
+$ docker-compose run test yarn test:cov
 ```
 
-## Support
+## Running tests without Docker
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+1.  Create .env file by cloning the [.env.sample](.env.sample)
 
-## Stay in touch
+```bash
+$ cp .env.sample .env
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+2.  Fill the .env file with corresponding variables
+
+3.  Run the tests
+
+```bash
+# unit and integration tests
+$ yarn test
+
+# test coverage
+$ yarn test:cov
+```
+
+## API Doc
+
+You can access the API documentation (Swagger UI) by entering base URL of the API (http://localhost:3000)
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+[MIT](LICENSE)
