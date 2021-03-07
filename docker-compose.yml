@@ -1,0 +1,52 @@
+version: '3.4'
+
+services:
+  mongodb:
+    image: mongo
+    networks:
+      - trip-analytics
+    ports:
+      - 27017:27017
+
+  mongodb-seed:
+    build: ./test/seed
+    networks:
+      - trip-analytics
+    depends_on:
+      - mongodb
+
+  test:
+    build:
+      context: .
+      target: test
+    container_name: trip-analytics-e2e-test
+    networks:
+      - trip-analytics
+    environment:
+      - NODE_ENV=test
+      - PORT=3000
+      - TA_JWT_SECRET_KEY=secret
+      - TA_MONGODB_CONNECTION_STRING=mongodb://mongodb/case
+    depends_on:
+      - mongodb
+      - mongodb-seed
+
+  production:
+    build: .
+    container_name: trip-analytics-production
+    ports:
+      - 3000:3000
+    networks:
+      - trip-analytics
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - TA_JWT_SECRET_KEY=secret
+      - TA_MONGODB_CONNECTION_STRING=mongodb://mongodb/case
+    depends_on:
+      - mongodb
+      - mongodb-seed
+
+networks:
+  trip-analytics:
+    driver: bridge
