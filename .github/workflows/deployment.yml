@@ -1,0 +1,26 @@
+name: trip-analytics-deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_DEPLOYMENT_KEYFILE }}
+
+      - name: Build docker image and push it to Google Container Registry
+        run: gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/trip-analytics
+
+      - name: Deploy image to cloud run
+        run: gcloud run deploy trip-analytics --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/trip-analytics --platform managed --region ${{ secrets.GCP_REGION }} --set-env-vars NODE_ENV=${{ secrets.ENVIRONMENT }} --set-env-vars TA_JWT_SECRET_KEY=${{ secrets.TA_JWT_SECRET_KEY }} --set-env-vars TA_MONGODB_CONNECTION_STRING=${{ secrets.TA_MONGODB_CONNECTION_STRING }}
