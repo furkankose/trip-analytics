@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TripHelper {
-  convertKilometerToRadius(kilometer: number) {
+  convertKilometerToRadius(kilometer = 0) {
     const oneKilometerInRadius = 0.000156785;
     return kilometer * oneKilometerInRadius;
   }
