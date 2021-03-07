@@ -26,6 +26,9 @@ async function bootstrap() {
       app,
       new DocumentBuilder()
         .setTitle('Trip Analytics API')
+        .setDescription(
+          'All API endpoints, except "/auth/login", are required to be accessed with JWT access token. You need to get your JWT access token by logging in the system, and set it to "Authorization" header',
+        )
         .setVersion('1.0.0')
         .addBearerAuth(
           { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
