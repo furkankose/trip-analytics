@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { PaginateModel, PaginateResult } from 'mongoose-paginate-v2';
+import { PaginateModel } from 'mongoose-paginate-v2';
 
 import { TripHelper } from './trip.helper';
 import { Trip, TripDocument } from './schemas/trip.schema';
 import { PointDTO } from './dtos/point.dto';
 import { DateRangeDTO } from './dtos/dateRange.dto';
 import { PaginationDTO } from './dtos/pagination.dto';
+import { PaginatedResponseDTO } from './dtos/paginatedResponse.dto';
+import { MinMaxDistanceResponseDTO } from './dtos/minMaxDistanceResponse.dto';
+import { TripCountGroupedByVehicleYearDTO } from './dtos/tripCountGroupedByVehicleYear.dto';
 
 @Injectable()
 export class TripService {
@@ -20,7 +23,7 @@ export class TripService {
     pointDto: PointDTO,
     dateRangeDto: DateRangeDTO,
     paginationDto: PaginationDTO,
-  ): Promise<PaginateResult<Trip>> {
+  ): Promise<PaginatedResponseDTO> {
     const { longitude, latitude } = pointDto;
     const radius = this.tripHelper.convertKilometerToRadius(pointDto.radius);
 
@@ -52,7 +55,9 @@ export class TripService {
     });
   }
 
-  async findMinMaxTripDistance(pointDto: PointDTO): Promise<any> {
+  async findMinMaxTripDistance(
+    pointDto: PointDTO,
+  ): Promise<MinMaxDistanceResponseDTO> {
     const { longitude, latitude } = pointDto;
     const radius = this.tripHelper.convertKilometerToRadius(pointDto.radius);
 
@@ -91,7 +96,9 @@ export class TripService {
     return distanceTravelled;
   }
 
-  async findTripCountsGroupedByVehicleYear(pointDto: PointDTO): Promise<any> {
+  async findTripCountsGroupedByVehicleYear(
+    pointDto: PointDTO,
+  ): Promise<TripCountGroupedByVehicleYearDTO[]> {
     const { longitude, latitude } = pointDto;
     const radius = this.tripHelper.convertKilometerToRadius(pointDto.radius);
 

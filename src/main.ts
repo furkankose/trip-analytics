@@ -27,6 +27,10 @@ async function bootstrap() {
       new DocumentBuilder()
         .setTitle('Trip Analytics API')
         .setVersion('1.0.0')
+        .addBearerAuth(
+          { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+          'Authorization',
+        )
         .build(),
     ),
   );
