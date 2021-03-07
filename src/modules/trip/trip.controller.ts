@@ -36,7 +36,7 @@ export class TripController {
     type: MinMaxDistanceResponseDTO,
   })
   @Get('distance')
-  async findMinMaxDistance(
+  async findMinMaxTripDistance(
     @Query() pointDto: PointDTO,
   ): Promise<MinMaxDistanceResponseDTO> {
     return this.tripService.findMinMaxTripDistance(pointDto);
