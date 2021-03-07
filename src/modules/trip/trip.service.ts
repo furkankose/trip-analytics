@@ -127,6 +127,12 @@ export class TripService {
       },
     };
 
-    return this.tripModel.aggregate([match, group, project]);
+    const sort = {
+      $sort: {
+        year: -1,
+      },
+    };
+
+    return this.tripModel.aggregate([match, group, project, sort]);
   }
 }
